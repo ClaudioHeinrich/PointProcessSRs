@@ -1,0 +1,19 @@
+>From uw-june!geops!tony@entropy.ms.washington.edu Wed Nov 12 12:09:35 1986
+
+All earthquakes in files 1969 through Oct 1986
+from Entiat, Leavenworth, Grand Coolee area. Obtained by :
+
+  runlow cat ~seis/loc.* | sel -y 47 48 -x 119 121 -p XP > file1 & 
+-------------------------------------------------------------------
+c...file has one line for each quake:
+c...  time x y depth mag label1 label2
+c...
+c...where time is days from jan1, 1970 0000
+c...      x, y    are east and north coords from 47.5N 121W in km.
+c...      depth   is depth in kms (negative)
+c...      mag     is coda magnitude
+c...      label1  is yrmodyhrmn of quake
+c...      label2  is sec of quake
+
+  Time(days)  x(km)   y(km)    Depth  Mag  2 LABELS(ORIGIN TIME)
+ ----------   -----   -----    ----   ---  ----------------
