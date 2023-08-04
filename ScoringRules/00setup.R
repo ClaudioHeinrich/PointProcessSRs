@@ -12,7 +12,7 @@ library(data.table)
 #install.packages("../RandomFields_3.3.14.tar.gz",repos = NULL, type = "source")
 
 
-setwd('~/NR/ProjectPointProcess/ModelEvaluation/simstudy/ScoringRules')
+setwd('~/NR/ProjectPointProcess/PointProcessSRs/ScoringRules/')
 
 set.seed(102030)
 
@@ -30,7 +30,7 @@ win = owin(xrange = limx,yrange = limy)
 
 n_exp = 50 # number of expected points for all models, except hP+
 
-models = c('hP','hP+','ihP','Str','ihT')
+models = c('hP','hP+','ihP','Str','ihT','LGCP')
 
 # intensity for nonhomogeneous process:
 
@@ -288,4 +288,4 @@ permutation_test_difference = function(a,
 
 # save everything 
 
-save.image(file = 'setup.RData')
+save.image(file = 'setup_r1.RData')

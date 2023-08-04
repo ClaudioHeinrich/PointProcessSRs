@@ -8,8 +8,12 @@ library(spatstat)
 library(data.table)
 
 library(ggplot2)
+library(cowplot)
+library(patchwork)
 
-setwd('~/NR/ProjectPointProcess/ModelEvaluation/simstudy/KernelVsLog/Study2-Displacements/')
+library(latex2exp)
+
+setwd('~/NR/ProjectPointProcess/PointProcessSRs/KernelVsLog/Study2-Displacements/')
 
 set.seed(123)
 
@@ -23,8 +27,8 @@ theme_set(theme_bw(base_size = 22))
 
 load(file = paste0('scores.RData'))
 
-pdf_dir = paste0('../../../Figures/study2/displacements/nexp',nexps,'_new/')
-dir.create(pdf_dir,showWarnings = F)
+pdf_dir = paste0('../../../ModelEvaluation/Figures/review1/study2/displacements/nexp',nexps,'_new/')
+dir.create(pdf_dir,showWarnings = F,recursive = TRUE)
 
 # For every score apply an affine linear function to scale it to [0,1] so that they can be plotted on the same range.
 
@@ -76,13 +80,24 @@ oo = 1
                                    paste0('N = ',nexps6)
                                    ))
     
+    model_labels_new = TeX(c('$F_1:\\ N(0,1)$',
+                             paste0('$F_2:\\ \\mu = ',mu2[1],'$'),
+                             paste0('$F_3:\\ \\eta = ',sig3,'$'),
+                             paste0('$F_4:\\ \\eta = ',sig4,'$'),
+                             paste0('$F_5:\\ \\rho = ',cor5,'$'),
+                             paste0('$F_6:\\ N = ',nexps6,'$')))
+    #dt_temp[,label := model_labels_new[pr]]
+    
+    
     pp = ggplot(dt_temp) + 
-      geom_boxplot(aes(x = bw,y = scaled_score,fill = as.factor(pr)),position=position_dodge(0.5),width = 0.33) +
+      geom_boxplot(aes(x = bw,y = scaled_score,fill = as.factor(pr)),width = 0.5,position=position_dodge(0.6)) +
       scale_x_discrete(labels = score_labels,name = '') +
       scale_y_discrete(labels = '',name = 'mean score',expand = c(0.1,0.1)) + 
-      scale_fill_discrete(name = 'pred. model', labels = model_labels) + 
-      ggtitle(paste0('N = ',N))
+      scale_fill_discrete(name = 'pred. model', labels = unname(model_labels_new)) + 
+      ggtitle(paste0('N = ',N)) + 
+      theme(legend.text.align = 0)
     
+    pp
     # adjust so that they look nice when plotted next to each other:remove legend from first and adjust plot width:
     if(N == 10) 
     {pp = pp + theme(legend.position = 'none')
@@ -90,10 +105,20 @@ oo = 1
     }
     if(N == 100) ww = 10
     
-    pdf(paste0(pdf_dir,'score_poisson_obsmod',oo,'_N',N,'.pdf'),width = ww, height = 7)
-      print(pp)
-    dev.off()
+    # pdf(paste0(pdf_dir,'score_poisson_obsmod',oo,'_N',N,'.pdf'),width = ww, height = 7)
+    #   print(pp)
+    # dev.off()
+    
+    assign(paste0('pp_',N),value = pp)
   }
+
+
+combined_plot <- pp_10 + pp_100+ plot_layout(guides = 'collect')
+
+
+pdf(paste0(pdf_dir,'score_poisson_combined',oo,'_both.pdf'),width = 18.5, height = 7)
+print(combined_plot)
+dev.off()
 
 
 save.image(file = paste0(pdf_dir,'image.RData'))

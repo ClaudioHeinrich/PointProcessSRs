@@ -13,12 +13,12 @@ library(data.table)
 library(ggplot2)
 
 
-setwd('~/NR/ProjectPointProcess/ModelEvaluation/simstudy/KernelVsLog/Study2-Displacements/')
+setwd('~/NR/ProjectPointProcess/PointProcessSRs/KernelVsLog/Study2-Displacements/')
 
 set.seed(102030)
 
 load('setup.RData')
-pdf_dir = paste0('../../../Figures/study2/displacements/nexp',nexps,'_new/')
+pdf_dir = paste0('../../../ModelEvaluation/Figures/review1/study2/displacements/nexp',nexps,'_new/')
 dir.create(pdf_dir,showWarnings = F)
 
 
@@ -179,9 +179,22 @@ model_labels = as.expression(c(bquote(mu[x] == .(mu2[1])),
                                bquote(rho == .(cor5)),
                                bquote(N == .(nexps6))))
 
+
+model_labels = as.expression(c(bquote(mu[x] == .(mu2[1])),
+                               bquote(eta == .(sig3)),
+                               bquote(eta == .(sig4)),
+                               bquote(rho == .(cor5)),
+                               bquote(N == .(nexps6))))
+
+model_labels_new = TeX(c(paste0('$F_2:\\ \\mu_x = ',mu2[1],'$'),
+                         paste0('$F_3:\\ \\eta = ',sig3,'$'),
+                         paste0('$F_4:\\ \\eta = ',sig4,'$'),
+                         paste0('$F_5:\\ \\rho = ',cor5,'$'),
+                         paste0('$F_6:\\ N = ',nexps6,'$')))
+
 p_val_means$pr_mod = factor(p_val_means$pr_mod,
                             levels = 2:6,
-                            labels = model_labels)
+                            labels = model_labels_new)
 
 
 
@@ -194,7 +207,7 @@ theme_set(theme_bw(base_size = 32))
 pdf(paste0(pdf_dir,'pvals.pdf'),width = 25)
   
   pp = ggplot(p_val_means[bw %in% c(0,bws)]) + 
-    geom_line(aes(x = N_obs,y = V1,color = bw, linetype = bw),size = 1) + 
+    geom_line(aes(x = N_obs,y = V1,color = bw, linetype = bw),linewidth = 1) + 
     geom_hline(yintercept = 0.05,linetype = 'dashed',alpha = 0.75) + 
     facet_grid(cols = vars(pr_mod),labeller = label_parsed) +
     xlab('Number of observed point patterns') + ylab('mean p-value') +

@@ -4,13 +4,13 @@
 rm(list = ls())
 
 library(spatstat)
-
+library(RandomFields)
 library(data.table)
 
 set.seed(102030)
 
-setwd('~/NR/ProjectPointProcess/ModelEvaluation/simstudy/ScoringRules/')
-load('setup.RData')
+setwd('~/NR/ProjectPointProcess/PointProcessSRs/ScoringRules/')
+load('setup_r1.RData')
 
 #######################
 
@@ -159,6 +159,7 @@ save(score_dt,K_scores,NEst_Kscore,perm_sc_K,
     lambda_scores,NEst_lambdascore,perm_sc_l,
     lnec_scores,NEst_lnecscore,perm_sc_lnec,
      file = 'scores_r1.RData')
+
 
 
 
